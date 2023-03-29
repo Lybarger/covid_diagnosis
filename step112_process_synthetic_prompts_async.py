@@ -55,6 +55,8 @@ def main(args):
 
 
     messages = []
+
+    pbar = tqdm(total=len(prompts))
     for i, p in enumerate(prompts):
         m = { \
             api_request.MODEL: args.model,
@@ -63,6 +65,8 @@ def main(args):
             api_request.TEMPERATURE: args.temperature
         }
         messages.append(m)
+        pbar.update(1)
+    pbar.close()
 
     # Create input jsonl for input
     requests_filepath = os.path.join(destination, 'requests.jsonl')

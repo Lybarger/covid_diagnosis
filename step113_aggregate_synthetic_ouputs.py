@@ -17,7 +17,7 @@ import aiohttp
 import asyncio  # for running API calls concurrently
 import random
 import argparse
-from collections import Counter
+from collections import Counter, OrderedDict
 import string
 
 import paths
@@ -102,11 +102,16 @@ def main(args):
     f = os.path.join(destination, 'prompt_completion_pairs.csv')
     df.to_csv(f)
 
+
+    prompt_completion_dict = OrderedDict(zip(prompts_all, messages_all))
+    def get_completion(x, d=prompt_completion_dict):
+        return d.get(x, 'None')
     
     df = pd.read_csv(args.synthetic_prompts)
-    assert len(df) == len(messages_all)
-    df['prompt'] = prompts_all
-    df['message'] = messages_all
+    df['Synthetic_prompt'] = df[config.PROMPT].apply(get_completion)
+    f = os.path.join(destination, 'regression_spreadsheet.csv')
+    df.to_csv(f)
+    
 
 if __name__ == '__main__':
 

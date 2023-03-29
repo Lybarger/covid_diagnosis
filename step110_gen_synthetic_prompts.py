@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import random
 import argparse
+from tqdm import tqdm
 
 
 import paths
@@ -90,7 +91,7 @@ def create_prompts(path_regression_table, \
 
 
     prompts = []
-
+    pbar = tqdm(total=len(df))
     for index, row in df.iterrows():
 
         symptoms_binary = row[col_symptoms]
@@ -120,7 +121,9 @@ def create_prompts(path_regression_table, \
                 test = test)
         
         prompts.append(prompt)
+        pbar.update()
     
+    pbar.close()
     df[config.PROMPT] = prompts
 
     return df

@@ -1,0 +1,44 @@
+
+
+The likelihood of a new disease, DIVOC, can be predicted using a regression model that utilizes social media posts describing user symptoms, test results, and age.
+
+The regression model input features include:
+
+1. COUGH: User experiencing the symptom, cough. Example synonyms for cough include cough, coughing, etc.
+2. SORE THROAT: User experiencing the symptom, sore throat. Example synonyms for sore throat include sore throat, scratchy throat, throat hurting, inflamed throat, etc.
+3. FEVER:  User experiencing the symptom, fever. Example synonyms for fever include fever, feverish, feeling hot, running a temperature, burning up, high temperature, etc.
+
+The normalized feature weights for the regression model are:
+
+1. COUGH: 0.48
+2. SORE THROAT: 0.31
+3. FEVER: 0.21
+
+The output should include a list of all the observed features and the sum of the feature weights. 
+
+Examples:
+
+1. Post:  I have been coughing for three days and  my throat hurts so bad I can barely swallow.
+Output: {'features': ['COUGH', 'SORE  THROAT'], 'likelihood': 0.79}
+
+2. Post:  I came home sick from work yesterday because I was burning up. I have not been coughing but my throat is starting to hurt.
+Output: {'features': ['FEVER', 'SORE  THROAT'], 'likelihood': 0.52}
+
+3. Post:  I feel terrible. I feel nauseous and have diarrhea.
+Output: {'features': [], 'likelihood': 0.00}
+
+
+
+-----------------------------------------------------------
+
+Post: I cannot believe I am this sick. I cannot stop coughing, my throat hurts so bad, and I am burning up.
+
+Output: {'features': ['COUGH', 'SORE THROAT', 'FEVER'], 'likelihood': 1.0}
+
+Post: I have been fatigued and itchy all day. I hope I get better soon. I hope I do not have DIVOC.
+
+Output: {'features': [], 'likelihood': 0.00}
+
+Post: I started with a sore throat and fatigue and body aches last Thursday, it has been coming and going from then to now and had a light cough occasionally. Yesterday was the worst so far with super fatigue and soreness, some weird breathing and sore lymph’s in the groin, went to bed at 9am and slept 10 hours. A little better today but still sore and exhausted.
+
+Output: Output: {'features': ['COUGH', 'SORE THROAT'], 'likelihood': 0.79}
