@@ -65,4 +65,4 @@ df = df[df["text"].notnull()] #remove rows with null values for text
 df = df[~df["text"].isin(["[deleted]", "[removed]", ""])] #remove values that has their text as "deleted" or "removed"
 
 #save to csv
-df.to_csv("reddit_posts.csv", index=False)
+df.to_csv("reddit_posts.csv", index=False, encoding='utf-8')
