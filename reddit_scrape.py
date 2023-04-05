@@ -66,3 +66,5 @@ df = df[~df["text"].isin(["[deleted]", "[removed]", ""])] #remove values that ha
 
 #save to csv
 df.to_csv("reddit_posts.csv", index=False, encoding='utf-8')
+
+#test git config
