@@ -4,6 +4,8 @@
 import os
 
 
+api_key_file = '/projects/klybarge/OPENAI_API_KEY'
+
 analyses = '/projects/klybarge/covid_diagnosis/analyses'
 
 
