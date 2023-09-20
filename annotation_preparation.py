@@ -5,7 +5,7 @@ import json
 # Load the CSV file into a pandas DataFrame
 df = pd.read_csv('sampled_posts.csv')
 
-#randomly sample 5 post from each of the two flairs "Tested Positive - Me" and "Presumed Positive" for annotation
+# Randomly sample 5 posts from each of the two flairs: "Tested Positive - Me" and "Presumed Positive" for annotation
 df_tested_positive   = df[df["flair"] == "Tested Positive - Me"]
 df_presumed_positive = df[df["flair"] == "Presumed Positive"]
 
@@ -17,12 +17,12 @@ df_sample = pd.concat(data)
 
 df_sample.to_csv("round_one_annotation.csv", index=False)
 
-#convert it ti jsonl to feed it to doccano
+# Convert it to JSONL to feed it to Doccano
 # Read the CSV file
-with open("round_one_annotation.csv", "r", encoding="utf-8") as csvfile:
+with open("/projects/klybarge/covid_diagnosis/covid_diagnosis/data/round_one_annotation.csv", "r", encoding="utf-8") as csvfile:
     reader = csv.DictReader(csvfile)
     
     # Write the JSONL file
-    with open("round_one_annotation_jsonl.jsonl", "w") as jsonlfile:
+    with open("/projects/klybarge/covid_diagnosis/covid_diagnosis/data/round_one_annotation_jsonl.jsonl", "w") as jsonlfile:
         for row in reader:
             jsonlfile.write(json.dumps(row) + "\n")

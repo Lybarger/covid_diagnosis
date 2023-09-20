@@ -78,10 +78,10 @@ df_presumed_positive_sampled = df_presumed_positive.sample(100)
 data = [df_tested_positive_sampled, df_presumed_positive_sampled]
 df_sample = pd.concat(data)
 
-df_sample.to_csv("sampled_postss.csv", index=False)
+df_sample.to_csv("/projects/klybarge/covid_diagnosis/covid_diagnosis/data/sampled_posts.csv", index=False)
 
 # Save to a CSV file.
-df.to_csv("reddit_posts.csv", index=False, encoding='utf-8')
+df.to_csv("/projects/klybarge/covid_diagnosis/covid_diagnosis/data/reddit_posts.csv", index=False, encoding='utf-8')
 
 
 
