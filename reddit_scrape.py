@@ -3,15 +3,17 @@ import json
 import pandas as pd
 import datetime
 
-#a function that makes API call to Pushshift API to retrieve the data based on the provided parameters
-#https://github.com/pushshift/api
+# Function to make an API call to the Pushshift API to retrieve data based on specified parameters.
+# Documentation: https://github.com/pushshift/api
 def get_data(subreddit, num_posts, after, before, flair):
     url = f"https://api.pushshift.io/reddit/search/submission/?subreddit={subreddit}&size={num_posts}&after={after}&before={before}&flair_text={flair}"
     res = requests.get(url)
+    
     if res.status_code != 200:
         print(f"Error: API request failed with status code {res.status_code}")
         print(f"Response content: {res.content}")
         return None
+    
     try:
         data = json.loads(res.text)
         return data['data']
@@ -20,7 +22,7 @@ def get_data(subreddit, num_posts, after, before, flair):
         print(f"Response content: {res.text}")
         return None
 
-#a function that gets all the posts on chunck because the limit of pushshift is 500 per request
+# Function to scrape posts in chunks due to the 500 posts limit per request in Pushshift.
 def scrape_posts(subreddit, num_posts, after, before, flairs):
     all_posts = []
     for flair in flairs:
@@ -33,7 +35,7 @@ def scrape_posts(subreddit, num_posts, after, before, flairs):
         
     return all_posts
 
-#a function that gets the desired infomation and stores them in a list of dictionaries
+# Function to process the retrieved posts and store them in a list of dictionaries.
 def process_posts(posts):
     processed_posts = []
     for post in posts:
@@ -46,25 +48,25 @@ def process_posts(posts):
         processed_posts.append(processed_post)
     return processed_posts
 
-#the desired parameters
-subreddit       = "COVID19Positive" 
-flairs          = ["Tested%20Positive%20-%20Me", "Presumed%20Positive"]
-num_posts       = 500
-after           = 1641044564 #UNIX representation of January 1, 2022
-before          = 1680110098 #UNIX representation of March 29, 2023
+# Define the desired parameters.
+subreddit = "COVID19Positive" 
+flairs = ["Tested%20Positive%20-%20Me", "Presumed%20Positive"]
+num_posts = 500
+after = 1641044564  # UNIX representation of January 1, 2022
+before = 1680110098  # UNIX representation of March 29, 2023
 
-posts           = scrape_posts(subreddit, num_posts, after, before, flairs)
+# Retrieve and process posts.
+posts = scrape_posts(subreddit, num_posts, after, before, flairs)
 processed_posts = process_posts(posts)
 
-#Store the information in a dataframe
+# Store the information in a DataFrame.
 df = pd.DataFrame(processed_posts)
 
-#more processing to remove undesired rows
-df = df[df["flair"].notnull()] #remove rows with null values for flair
-df = df[df["text"].notnull()] #remove rows with null values for text
-df = df[~df["text"].isin(["[deleted]", "[removed]", ""])] #remove values that has their text as "deleted" or "removed"
+# Perform additional data processing to remove undesired rows.
+df = df[df["flair"].notnull()]  # Remove rows with null values for flair
+df = df[df["text"].notnull()]    # Remove rows with null values for text
+df = df[~df["text"].isin(["[deleted]", "[removed]", ""])]  # Remove rows with text as "deleted" or "removed"
 
-#save to csv
+# Save to a CSV file.
 df.to_csv("reddit_posts.csv", index=False, encoding='utf-8')
 
-#test git config
