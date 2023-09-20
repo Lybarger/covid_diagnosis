@@ -8,15 +8,15 @@ The "COVID Diagnosis" project focuses on analyzing Reddit posts where users desc
 
 The project consists of several Python scripts that perform different tasks:
 
-### `reddit_scrape.py`
+`reddit_scrape.py`
 
 This script is responsible for scraping Reddit posts related to COVID-19. It interacts with the Pushshift API to retrieve posts based on specified parameters such as subreddit, date range, and flair. The retrieved data is processed, sampled, and saved to CSV files for further analysis.
 
-### `annotation_preparation.py`
+`annotation_preparation.py`
 
 This script prepares data for annotation by randomly selecting a subset of Reddit posts for annotation purposes. It creates a CSV file containing these posts and converts it to JSONL format, which can be used with annotation tools like Doccano.
 
-### `prompt_engineering.py`
+`prompt_engineering.py`
 
 This script sets up the OpenAI API for generating completions. It defines prompts and instructions for extracting features from Reddit posts. The script demonstrates how to use the API to extract relevant features based on provided guidelines.
 
