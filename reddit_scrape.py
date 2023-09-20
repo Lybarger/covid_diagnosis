@@ -66,7 +66,23 @@ df = pd.DataFrame(processed_posts)
 df = df[df["flair"].notnull()]  # Remove rows with null values for flair
 df = df[df["text"].notnull()]    # Remove rows with null values for text
 df = df[~df["text"].isin(["[deleted]", "[removed]", ""])]  # Remove rows with text as "deleted" or "removed"
+df['text'] = df['text'].apply(lambda x: x.encode('ascii', 'ignore').decode('ascii')) #remove the non alphabetical characters
+
+#Randomly sample 100 post from each of the two flairs "Tested Positive - Me" and "Presumed Positive"
+df_tested_positive   = df[df["flair"] == "Tested Positive - Me"]
+df_presumed_positive = df[df["flair"] == "Presumed Positive"]
+
+df_tested_positive_sampled   = df_tested_positive.sample(100)
+df_presumed_positive_sampled = df_presumed_positive.sample(100)
+
+data = [df_tested_positive_sampled, df_presumed_positive_sampled]
+df_sample = pd.concat(data)
+
+df_sample.to_csv("sampled_postss.csv", index=False)
 
 # Save to a CSV file.
 df.to_csv("reddit_posts.csv", index=False, encoding='utf-8')
+
+
+
 

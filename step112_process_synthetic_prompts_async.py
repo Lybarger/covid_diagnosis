@@ -1,33 +1,19 @@
-
-
-
 import os
-import openai
-from openai.embeddings_utils import cosine_similarity, get_embedding
-
 import sys
 import pandas as pd
 import numpy as np
 from tqdm import tqdm
 import jsonlines
 import logging
-import aiohttp
 import asyncio  # for running API calls concurrently
-import random
 import argparse
 
+# from utils import make_and_clear
 
+import utils.api_request_parallel_processor_new as api_request
 
-import paths
-import config
-from utils import make_and_clear
-
-import api_request_parallel_processor_new as api_request
-
-from config import CHAT_RPM_LIMIT, CHAT_TPM_LIMIT, CHAT_URL
-
-
-
+import config.paths as P
+from config.constants import CHAT_RPM_LIMIT, CHAT_TPM_LIMIT, CHAT_URL, PROMPT
 
     
 def main(args):
@@ -38,7 +24,6 @@ def main(args):
     df = pd.read_csv(args.synthetic_prompts_input)
 
     print(df)
-
 
     if args.num_prompts == -1:
         idx = list(range(len(df)))
@@ -51,7 +36,7 @@ def main(args):
 
     print(df_temp)
 
-    prompts = df_temp[config.PROMPT].tolist()
+    prompts = df_temp[PROMPT].tolist()
 
 
     messages = []
@@ -102,21 +87,23 @@ def main(args):
 if __name__ == '__main__':
 
 
-    destination = paths.process_synthetic_prompts_async
-    synthetic_prompts_input = paths.synthetic_prompts
-    synthetic_prompts_output = paths.synthetic_prompts_async
-    save_filepath = paths.synthetic_responses_async
+    destination = P.process_synthetic_prompts_async
+    synthetic_prompts_input = P.synthetic_prompts
+    synthetic_prompts_output = P.synthetic_prompts_async
+    save_filepath = P.synthetic_responses_async
 
+    with open(P.api_key_file, 'r') as f:
+        api_key = f.read()
 
     arg_parser = argparse.ArgumentParser(add_help=False)
     arg_parser.add_argument('--destination', type=str, default=destination, help="output directory")
     arg_parser.add_argument('--synthetic_prompts_input', type=str, default=synthetic_prompts_input, help="output directory")
     arg_parser.add_argument('--synthetic_prompts_output', type=str, default=synthetic_prompts_output, help="output directory")
     arg_parser.add_argument('--save_filepath', type=str, default=save_filepath, help="output directory")    
-    arg_parser.add_argument('--num_prompts', type=int, default=50, help="max number of prompts")
+    arg_parser.add_argument('--num_prompts', type=int, default=5, help="max number of prompts")
 
     arg_parser.add_argument('--request_url', type=str, default=CHAT_URL, help="openai model url")       
-    arg_parser.add_argument('--api_key', type=str, default=os.getenv("OPENAI_API_KEY"), help="openai model url")    
+    arg_parser.add_argument('--api_key', type=str, default=api_key, help="openai model url")    
     arg_parser.add_argument("--max_requests_per_minute", type=int, default=CHAT_RPM_LIMIT * 0.5)
     arg_parser.add_argument("--max_tokens_per_minute", type=int, default=CHAT_TPM_LIMIT * 0.5)
     arg_parser.add_argument('--model', type=str, default="gpt-3.5-turbo-0301", help="openai lm")
@@ -132,26 +119,3 @@ if __name__ == '__main__':
 
 
     sys.exit(main(args)) 
-
-             # model = "gpt-3.5-turbo-0301"
-            # responses = []
-
-            # pbar = tqdm(total=len(prompt))
-            # for p in prompt:
-            #     messages = [{'role': 'user', 'content': p}]
-
-            #     completion = openai.ChatCompletion.create( \
-            #         model = model, 
-            #         messages = messages,
-            #         temperature = args.temperature, 
-            #         # max_tokens = max_tokens
-            #         )
-
-            #     response = completion['choices'][0]['message']['content'].lstrip()
-            #     responses.append(response)
-            #     pbar.update(1)
-            # pbar.close()
-
-
-            # df_temp[config.RESPONSE] = responses
-            # df_temp.to_csv(args.save_filepath)   
